@@ -5,11 +5,13 @@ import { useRef, useState } from "react";
 import { yellowImg } from "../utils";
 import * as THREE from "three";
 import { View } from "@react-three/drei";
+import { models, sizes } from "../constants";
+import { label } from "three/webgpu";
 
 const Model = () => {
   const [size, setSize] = useState("small");
 
-  const [Model, setModel] = useState({
+  const [model, setModel] = useState({
     title: "iPhone 15 Pro in Natural Titanium",
     color: ["#8f8a81", "#ffe7b9", "#6f6c64"],
     img: yellowImg,
@@ -29,7 +31,7 @@ const Model = () => {
   }, []);
 
   return (
-    <section classname="common-padding">
+    <section className="common-padding">
       <div className="screen-max-width">
         <h1 id="heading" className="section-heading">
           Take a closer look.
@@ -46,7 +48,7 @@ const Model = () => {
               gsapType="view1"
               controllerRer={cameraControlSmall}
               setRotationState={setSmallRotation}
-              item={Model}
+              item={model}
               size={size}
             />
             <ModelView
@@ -55,7 +57,7 @@ const Model = () => {
               gsapType="view2"
               controllerRer={cameraControlLarge}
               setRotationState={setLargeRotation}
-              item={Model}
+              item={model}
               size={size}
             />
             <canvas
@@ -67,9 +69,44 @@ const Model = () => {
                 bottom: 0,
                 right: 0,
                 overflow: "hidden",
-              }}>
+              }}
+              eventSource={document.getElementById("root")}>
               <View.Port />
             </canvas>
+          </div>
+          <div className="mx-auto w-full">
+            <p className="text-sm font-light text-center mb-5">
+              {" "}
+              {model.title}
+            </p>
+            <div className="flex-center">
+              <ul className="color-container">
+                {models.map((item, index) => (
+                  <li
+                    key={index}
+                    className="w-6 h-6 rounded-full mx-2 cursor-pointer "
+                    style={{
+                      backgroundColor: item.color[0],
+                    }}
+                    onClick={() => setModel(item)}
+                  />
+                ))}
+              </ul>
+              <button className="size-btn-container">
+                {sizes.map(({ label, value }) => (
+                  <span
+                    key={label}
+                    className="size-btn"
+                    style={{
+                      backgroundColor: size === value ? "white" : "transparent",
+                      color: size === value ? "black" : "white",
+                    }}
+                    onClick={() => setSize(value)}>
+                    {label}
+                  </span>
+                ))}
+              </button>
+            </div>
           </div>
         </div>
       </div>
